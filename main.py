@@ -28,10 +28,14 @@ while True:
             window['-SENHA-'].update(text_color='white')
 
 windowLay = [
-        [sg.InputText('', key='-SENHA-', background_color='white', text_color='black')],
-        [sg.Text('                         ',key='worng', text_color='red', font=(12))],
-        [sg.Button('Ok'),sg.Button('Cancele')]
-    ]
+        [sg.Text("*****************************************", font=(14))],
+        [sg.Text("i : inserir nova senha", font=(14))],
+        [sg.Text("l : listar serviços salvos", font=(14))],
+        [sg.Text("r : recuperar uma senha", font=(14))],
+        [sg.Text("s : sair", font=(14))],
+        [sg.Text("*****************************************", font=(14))],
+        [sg.InputText('',font=(12),key='-INF-'),sg.Button('Ok')]
+        ]
 
 conn=sqlite3.connect('passwords.db')
 
@@ -45,14 +49,6 @@ CREATE TABLE IF NOT EXISTS users (
 );
 ''')
 
-def menu():
-    print("*****************************************")
-    print("i : inserir nova senha")
-    print("l : listar serviços salvos")
-    print("r : recuperar uma senha")
-    print("s : sair")
-    print("*****************************************")
-
 def get_password(service):
     cursor.execute(f'''
         SELECT username, password FROM users
@@ -64,6 +60,9 @@ def get_password(service):
     else:
         for user in cursor.fetchall():
             print(user)
+
+def inserPassW():
+    print('che')
 
 def insert_password(service, username,password):
     cursor.execute(f'''
@@ -94,11 +93,13 @@ window = sg.Window('PassWords!!', windowLay)
 
 while True:
     event, values = window.read()
-    if event == sg.WIN_CLOSED:
+    if values['-INF-']=='s' or event == sg.WIN_CLOSED:
+        print('Fecha App')
         exit()
 
+    if values['-INF-']=='i':
+        inserPassW()
 
-    print(event)
 
 conn.close()
         
