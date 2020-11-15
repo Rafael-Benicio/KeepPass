@@ -1,12 +1,37 @@
+import PySimpleGUI as sg 
 import sqlite3
 
 MASTER_PASSWORD= '123456'
 
-senha= str(input('Insira sua senha master'))
+sg.theme('Dark Black')  # please make your windows colorful
 
-if senha!=MASTER_PASSWORD:
-    print('Senha invalida!')
-    exit()
+layout = [
+        [sg.InputText('', key='-SENHA-', background_color='white', text_color='black')],
+        [sg.Text('                         ',key='worng', text_color='red', font=(12))],
+        [sg.Button('Ok'),sg.Button('Cancele')]
+    ]
+
+window = sg.Window('PassWords!!', layout)
+
+while True:
+    event, values = window.read()
+    if  event=='Cancele' or event == sg.WIN_CLOSED:
+        print(event, "exiting")
+        exit()
+    if event =='Ok':
+        pw = str(values['-SENHA-'])
+        if pw ==MASTER_PASSWORD:
+            break
+        else:
+            window['-SENHA-'].update(background_color='red')
+            window['worng'].update('Senha errada')
+            window['-SENHA-'].update(text_color='white')
+
+windowLay = [
+        [sg.InputText('', key='-SENHA-', background_color='white', text_color='black')],
+        [sg.Text('                         ',key='worng', text_color='red', font=(12))],
+        [sg.Button('Ok'),sg.Button('Cancele')]
+    ]
 
 conn=sqlite3.connect('passwords.db')
 
@@ -65,16 +90,15 @@ def funcLiner(op):
         service=str(input('*Qual o nome do serviço?'))
         get_password(service)
 
-while True:
-    menu()
-    op=str(input('O que deseja fazer?'))
-    if op not in ['l','i','r','s']:
-        print('Opção não valida')
-        continue
-    if op =='s':
-        break
+window = sg.Window('PassWords!!', windowLay)
 
-    funcLiner(op)
+while True:
+    event, values = window.read()
+    if event == sg.WIN_CLOSED:
+        exit()
+
+
+    print(event)
 
 conn.close()
         
